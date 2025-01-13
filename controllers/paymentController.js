@@ -8,6 +8,17 @@ exports.postPayment = async (req, res) => {
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
+  // try {
+  //   const clientInfo = req.body;
+
+    
+  //   const paymentUrl = await paymentService.createPayment(clientInfo);
+
+
+  //   res.redirect(paymentUrl);
+  // } catch (error) {
+  //   res.status(500).json({ error: error.message });
+  // }
 };
 
 // exports.createPaymentInfo = async (req, res) => {

@@ -9,6 +9,7 @@ exports.createPayment = async (data) => {
       }
 };
 
+
 // exports.createPaymentInfo = async (data) => {
 //     try {
 //       const paymentInfo = new Payment(data);
