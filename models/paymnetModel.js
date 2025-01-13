@@ -7,6 +7,7 @@ const paymentSchema = new mongoose.Schema({
   contactNumber: { type: Number},
   packegPrice: { type: Number},
   currencySymbol: { type: String},
+  planName:{type: String}
 }, );
 
 module.exports = mongoose.model("Payment", paymentSchema);

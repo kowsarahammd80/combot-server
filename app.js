@@ -13,6 +13,6 @@ app.get("/", (req, res) => {
     res.send("Route is working! YaY!");
 });
 
-app.use('/api', paymentRoute);
+app.use('/api/paymentInfo', paymentRoute);
 
 module.exports = app;
