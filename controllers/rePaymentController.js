@@ -63,7 +63,7 @@ class rePaymentController {
                 {
                     mode: '0011',
                     payerReference: " ",
-                    callbackURL: 'http://localhost:5000/api/test/payment/callback',
+                    callbackURL: 'https://combot-server-1.onrender.com/api/test/payment/callback',
                     amount: amount,
                     currency: "BDT",
                     intent: 'sale',
@@ -86,7 +86,7 @@ class rePaymentController {
         const { paymentID, status } = req.query
 
         if (status === 'cancel' || status === 'failure') {
-            return res.redirect(`http://localhost:3000/error?message=${status}`)
+            return res.redirect(`https://unrivaled-bombolone-c1a555.netlify.app/error?message=${status}`)
         }
         if (status === 'success') {
             try {
@@ -103,13 +103,13 @@ class rePaymentController {
                         amount: parseInt(data.amount)
                     })
 
-                    return res.redirect(`http://localhost:3000/success`)
+                    return res.redirect(`https://unrivaled-bombolone-c1a555.netlify.app/success`)
                 }else{
-                    return res.redirect(`http://localhost:3000/error?message=${data.statusMessage}`)
+                    return res.redirect(`https://unrivaled-bombolone-c1a555.netlify.app/error?message=${data.statusMessage}`)
                 }
             } catch (error) {
                 console.log(error)
-                return res.redirect(`http://localhost:5173/error?message=${error.message}`)
+                return res.redirect(`https://unrivaled-bombolone-c1a555.netlify.app/error?message=${error.message}`)
             }
         }
     }
