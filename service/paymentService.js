@@ -4,6 +4,7 @@ const Payment = require ('../models/paymnetModel.js')
 exports.createPayment = async (data) => {
     try {
         return await Payment.create(data); // Creates a new payment record in the database
+        
       } catch (error) {
         throw new Error(`Error creating payment: ${error.message}`);
       }
