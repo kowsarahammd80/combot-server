@@ -4,6 +4,9 @@ const PaymentBkashSchema = new mongoose.Schema({
     userId: {
         type: String,
     },
+    name: {
+        type: String,
+    },
     trxID: {
         type: String,
     },

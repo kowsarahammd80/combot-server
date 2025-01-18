@@ -7,9 +7,9 @@ const body_parser = require('body-parser')
 
 app.use(express.json());
 const allowedOrigins = [
-    'https://beamish-dodol-d1568a.netlify.app',
-    'https://unrivaled-bombolone-c1a555.netlify.app',
-    'https://combot-server-1.onrender.com',
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://localhost:5000',
 ];
 
 app.use(cors({
