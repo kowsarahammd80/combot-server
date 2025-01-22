@@ -1,26 +1,66 @@
 const mongoose = require("mongoose");
 
+// const rePaymentSchema = new mongoose.Schema({
+//   userId:{
+//     type: Number,
+//   },
+//   paymentID:{
+//     type: String,
+//   },
+//   trxID:{
+//     type: String,
+//   },
+//   number:{
+//     type: String,
+//   },
+//   email:{
+//     type: String,
+//   },
+//   packageName: {
+//     type: String
+//   },
+//   name:{
+//     type: String
+//   },
+//   date: {
+//     type: String,
+//     default: Date.now,
+//   },
+//   amount: {
+//     type: Number,
+//   },
+//   invoiceNumber:{
+//     type: String
+//   }
+// });
+
 const rePaymentSchema = new mongoose.Schema({
-  userId:{
+  userId: {
     type: Number,
   },
-  paymentID:{
+  paymentID: {
     type: String,
   },
-  trxID:{
+  trxID: {
     type: String,
   },
-  number:{
+  number: {
     type: String,
   },
-  email:{
+  email: {
     type: String,
   },
   packageName: {
-    type: String
+    type: String,
   },
-  name:{
-    type: String
+  businessName: { // Add this field
+    type: String,
+  },
+  paymentStatus:{
+    type: String,
+  },
+  name: {
+    type: String,
   },
   date: {
     type: String,
@@ -29,10 +69,17 @@ const rePaymentSchema = new mongoose.Schema({
   amount: {
     type: Number,
   },
-  invoiceNumber:{
+  refund: {
     type: String
-  }
+  },
+  paymentType: {
+    type: String  
+  },
+  invoiceNumber: {
+    type: String,
+  },
 });
+
 
 const BkashPayment = mongoose.model("BkashPayment", rePaymentSchema);
 
