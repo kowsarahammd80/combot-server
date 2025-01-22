@@ -39,7 +39,7 @@ class rePaymentController {
         {
           mode: "0011",
           payerReference: " ",
-          callbackURL: `https://combot-server-1.onrender.comapi/test/payment/callback?name=${encodeURIComponent(
+          callbackURL: `https://combot-server-1.onrender.com/api/test/payment/callback?name=${encodeURIComponent(
             name || "Default Name"
           )}&email=${encodeURIComponent(
             email || "example@example.com"
