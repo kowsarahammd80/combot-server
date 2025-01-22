@@ -25,7 +25,7 @@ class paymentController {
             const { data } = await axios.post(process.env.bkash_create_payment_url, {
                 mode: '0011',
                 payerReference: " ",
-                callbackURL: 'http://localhost:5000/api/bkash/payment/callback',
+                callbackURL: 'https://combot-server-1.onrender.comapi/bkash/payment/callback',
                 amount: amount,
                 currency: "BDT",
                 intent: 'sale',
