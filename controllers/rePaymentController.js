@@ -133,7 +133,7 @@ class rePaymentController {
             invoiceNumber: data.merchantInvoiceNumber,
           });
 
-          console.log(data);
+          // console.log(data);
 
           return res.redirect(
             `https://unrivaled-bombolone-c1a555.netlify.app/success?message=${data.statusMessage}`

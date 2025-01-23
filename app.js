@@ -7,9 +7,9 @@ const body_parser = require('body-parser')
 
 app.use(express.json());
 const allowedOrigins = [
-    'https://beamish-dodol-d1568a.netlify.app',
-    'https://unrivaled-bombolone-c1a555.netlify.app',
     'https://polite-cactus-675786.netlify.app',
+    'https://unrivaled-bombolone-c1a555.netlify.app',
+    'https://beamish-dodol-d1568a.netlify.app',
 ];
 
 app.use(cors({
