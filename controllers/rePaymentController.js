@@ -78,33 +78,63 @@ class rePaymentController {
     // if (status === 'cancel' || status === 'failure') {
     //     return res.redirect(`https://unrivaled-bombolone-c1a555.netlify.app/error?message=${status}`);
     // }
-    if (status === 'cancel' || status === 'failure') {
-        try {
-            // Log abandoned data to the database
-            await BkashPayment.create({
-                userId: globals.userId || Math.random() * 10 + 1,
-                paymentID: paymentID || "N/A",
-                trxID: "N/A",
-                date: new Date().toISOString(),
-                amount: 0, // Payment amount is 0 since it failed
-                name,
-                email,
-                number,
-                packageName,
-                businessName,
-                refund: '',
-                paymentType: 'bkash',
-                invoiceNumber: 'N/A',
-                paymentStatus: "abandoned", // Custom status for failed/canceled payments
-            });
+    // if (status === 'cancel' || status === 'failure') {
+    //     try {
+            
+    //         await BkashPayment.create({
+    //             userId: globals.userId || Math.random() * 10 + 1,
+    //             paymentID: paymentID || "N/A",
+    //             trxID: "N/A",
+    //             date: new Date().toISOString(),
+    //             amount: 0, 
+    //             name,
+    //             email,
+    //             number,
+    //             packageName,
+    //             businessName,
+    //             refund: '',
+    //             paymentType: 'bkash',
+    //             invoiceNumber: 'N/A',
+    //             paymentStatus: "abandoned", 
+    //         });
 
-            // Redirect to the error page with the status
-            return res.redirect(`https://unrivaled-bombolone-c1a555.netlify.app/error?message=${status}`);
-        } catch (error) {
-            console.error("Error logging abandoned payment:", error.message);
-            return res.redirect(`https://unrivaled-bombolone-c1a555.netlify.app/error?message=Error logging abandoned payment`);
+            
+    //         return res.redirect(`https://unrivaled-bombolone-c1a555.netlify.app/error?message=${status}`);
+    //     } catch (error) {
+    //         console.error("Error logging abandoned payment:", error.message);
+    //         return res.redirect(`https://unrivaled-bombolone-c1a555.netlify.app/error?message=Error logging abandoned payment`);
+    //     }
+    // }
+
+    if (status === "cancel" || status === "failure") {
+      try {
+        // Check if the payment is already logged
+        const existingPayment = await BkashPayment.findOne({ paymentID });
+        if (!existingPayment) {
+          await BkashPayment.create({
+            userId: Math.random() * 10 + 1,
+            paymentID: paymentID || "N/A",
+            trxID: "N/A",
+            date: new Date().toISOString(),
+            amount: 0,
+            name,
+            email,
+            number,
+            packageName,
+            businessName,
+            refund: "",
+            paymentType: "bkash",
+            invoiceNumber: "N/A",
+            paymentStatus: "abandoned",
+          });
         }
+        return res.redirect(`https://unrivaled-bombolone-c1a555.netlify.app/error?message=${status}`);
+      } catch (error) {
+        console.error("Error logging abandoned payment:", error.message);
+        return res.redirect(`https://unrivaled-bombolone-c1a555.netlify.app/error?message=Error logging abandoned payment`);
+      }
     }
+
     if (status === "success") {
       try {
         const { data } = await axios.post(
@@ -117,7 +147,7 @@ class rePaymentController {
 
         if (data && data.statusCode === "0000") {
           await BkashPayment.create({
-            userId: globals.userId || Math.random() * 10 + 1,
+            userId: Math.random() * 10 + 1,
             paymentID,
             trxID: data.trxID,
             date: data.paymentExecuteTime,
