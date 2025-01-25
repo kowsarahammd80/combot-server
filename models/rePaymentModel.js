@@ -40,6 +40,7 @@ const rePaymentSchema = new mongoose.Schema({
   },
   paymentID: {
     type: String,
+    unique: true
   },
   trxID: {
     type: String,
@@ -73,6 +74,9 @@ const rePaymentSchema = new mongoose.Schema({
     type: String
   },
   paymentType: {
+    type: String  
+  },
+  paymentNumber: {
     type: String  
   },
   invoiceNumber: {

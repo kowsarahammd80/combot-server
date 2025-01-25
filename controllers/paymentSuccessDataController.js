@@ -1,5 +1,6 @@
 const paymentSuccessDataService = require('../service/payemtSuccessDataService')
 
+
 exports.getPaymentsController = async (req, res) => {
     const { packageName } = req.query;
 

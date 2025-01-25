@@ -39,7 +39,7 @@ class rePaymentController {
         {
           mode: "0011",
           payerReference: " ",
-          callbackURL: `https://combot-server-1.onrender.com/api/test/payment/callback?name=${encodeURIComponent(
+          callbackURL: `http://localhost:5000/api/test/payment/callback?name=${encodeURIComponent(
             name || "Default Name"
           )}&email=${encodeURIComponent(
             email || "example@example.com"
@@ -72,69 +72,57 @@ class rePaymentController {
 
   // call back for data post
   call_back = async (req, res) => {
-    const { paymentID, status, name, email, number, packageName, businessName } = req.query;
+    const {
+      paymentID,
+      status,
+      name,
+      email,
+      number,
+      packageName,
+      businessName,
+    } = req.query;
     console.log("callback query", req.query);
+
+    const existingPayment = await BkashPayment.findOne({ paymentID });
+    if (existingPayment) {
+      return res.redirect(
+        `http://localhost:3001/success?message=Payment already processed`
+      );
+    }
 
     // if (status === 'cancel' || status === 'failure') {
     //     return res.redirect(`https://unrivaled-bombolone-c1a555.netlify.app/error?message=${status}`);
     // }
-    // if (status === 'cancel' || status === 'failure') {
-    //     try {
-            
-    //         await BkashPayment.create({
-    //             userId: globals.userId || Math.random() * 10 + 1,
-    //             paymentID: paymentID || "N/A",
-    //             trxID: "N/A",
-    //             date: new Date().toISOString(),
-    //             amount: 0, 
-    //             name,
-    //             email,
-    //             number,
-    //             packageName,
-    //             businessName,
-    //             refund: '',
-    //             paymentType: 'bkash',
-    //             invoiceNumber: 'N/A',
-    //             paymentStatus: "abandoned", 
-    //         });
-
-            
-    //         return res.redirect(`https://unrivaled-bombolone-c1a555.netlify.app/error?message=${status}`);
-    //     } catch (error) {
-    //         console.error("Error logging abandoned payment:", error.message);
-    //         return res.redirect(`https://unrivaled-bombolone-c1a555.netlify.app/error?message=Error logging abandoned payment`);
-    //     }
-    // }
 
     if (status === "cancel" || status === "failure") {
       try {
-        // Check if the payment is already logged
-        const existingPayment = await BkashPayment.findOne({ paymentID });
-        if (!existingPayment) {
-          await BkashPayment.create({
-            userId: Math.random() * 10 + 1,
-            paymentID: paymentID || "N/A",
-            trxID: "N/A",
-            date: new Date().toISOString(),
-            amount: 0,
-            name,
-            email,
-            number,
-            packageName,
-            businessName,
-            refund: "",
-            paymentType: "bkash",
-            invoiceNumber: "N/A",
-            paymentStatus: "abandoned",
-          });
-        }
-        return res.redirect(`https://unrivaled-bombolone-c1a555.netlify.app/error?message=${status}`);
+        
+        await BkashPayment.create({
+          userId: globals.userId || Math.random() * 10 + 1,
+          paymentID: paymentID || "N/A",
+          trxID: "N/A",
+          date: new Date().toISOString(),
+          amount: parseInt(data.amount), 
+          name,
+          email,
+          number,
+          packageName,
+          businessName,
+          refund: "",
+          paymentType: "bkash",
+          paymentNumber: data.payerAccount,
+          invoiceNumber: data.merchantInvoiceNumber,
+          paymentStatus: "abandoned",
+        });
+
+        return res.redirect(`http://localhost:3001/error?message=${status}`);
       } catch (error) {
         console.error("Error logging abandoned payment:", error.message);
-        return res.redirect(`https://unrivaled-bombolone-c1a555.netlify.app/error?message=Error logging abandoned payment`);
+        return res.redirect(
+          `http://localhost:3001/error?message=Error logging abandoned payment`
+        );
       }
     }
-
     if (status === "success") {
       try {
         const { data } = await axios.post(
@@ -147,7 +135,7 @@ class rePaymentController {
 
         if (data && data.statusCode === "0000") {
           await BkashPayment.create({
-            userId: Math.random() * 10 + 1,
+            userId: globals.userId || Math.random() * 10 + 1,
             paymentID,
             trxID: data.trxID,
             date: data.paymentExecuteTime,
@@ -160,22 +148,23 @@ class rePaymentController {
             refund: "",
             paymentType: "bkash",
             paymentStatus: "success",
+            paymentNumber: data.payerAccount,
             invoiceNumber: data.merchantInvoiceNumber,
           });
 
-          // console.log(data);
+          console.log(data);
 
           return res.redirect(
-            `https://unrivaled-bombolone-c1a555.netlify.app/success?message=${data.statusMessage}`
+            `http://localhost:3001/success?message=${data.statusMessage}`
           );
         } else {
           return res.redirect(
-            `https://unrivaled-bombolone-c1a555.netlify.app/error?message=${data.statusMessage}`
+            `http://localhost:3001/error?message=${data.statusMessage}`
           );
         }
       } catch (error) {
         return res.redirect(
-          `https://unrivaled-bombolone-c1a555.netlify.app/error?message=${error.message}`
+          `http://localhost:3001/error?message=${error.message}`
         );
       }
     }

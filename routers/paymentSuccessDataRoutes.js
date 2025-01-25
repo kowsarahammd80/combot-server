@@ -12,4 +12,5 @@ router.route('/getPaymentSuccessData')
 router.route('/getAbandonedPayments')
 .get(paymentSuccessDataController.getAbandonedPaymentsController)
 
+
 module.exports = router;
