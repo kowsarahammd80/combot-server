@@ -39,7 +39,7 @@ class rePaymentController {
         {
           mode: "0011",
           payerReference: " ",
-          callbackURL: `http://localhost:5000/api/test/payment/callback?name=${encodeURIComponent(
+          callbackURL: `https://combot-server-1.onrender.com/api/test/payment/callback?name=${encodeURIComponent(
             name || "Default Name"
           )}&email=${encodeURIComponent(
             email || "example@example.com"
@@ -86,7 +86,7 @@ class rePaymentController {
     const existingPayment = await BkashPayment.findOne({ paymentID });
     if (existingPayment) {
       return res.redirect(
-        `http://localhost:3001/success?message=Payment already processed`
+        `https://unrivaled-bombolone-c1a555.netlify.app/success?message=Payment already processed`
       );
     }
 
@@ -115,11 +115,11 @@ class rePaymentController {
           paymentStatus: "abandoned",
         });
 
-        return res.redirect(`http://localhost:3001/error?message=${status}`);
+        return res.redirect(`https://unrivaled-bombolone-c1a555.netlify.app/error?message=${status}`);
       } catch (error) {
         console.error("Error logging abandoned payment:", error.message);
         return res.redirect(
-          `http://localhost:3001/error?message=Error logging abandoned payment`
+          `https://unrivaled-bombolone-c1a555.netlify.app/error?message=Error logging abandoned payment`
         );
       }
     }
@@ -155,16 +155,16 @@ class rePaymentController {
           console.log(data);
 
           return res.redirect(
-            `http://localhost:3001/success?message=${data.statusMessage}`
+            `https://unrivaled-bombolone-c1a555.netlify.app/success?message=${data.statusMessage}`
           );
         } else {
           return res.redirect(
-            `http://localhost:3001/error?message=${data.statusMessage}`
+            `https://unrivaled-bombolone-c1a555.netlify.app/error?message=${data.statusMessage}`
           );
         }
       } catch (error) {
         return res.redirect(
-          `http://localhost:3001/error?message=${error.message}`
+          `https://unrivaled-bombolone-c1a555.netlify.app/error?message=${error.message}`
         );
       }
     }
