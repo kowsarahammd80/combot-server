@@ -1,6 +1,16 @@
 const paymentSuccessDataService = require('../service/payemtSuccessDataService')
 
 
+exports.byDefaultAbandonedController = async (req, res) => {
+    try {
+        const byDefaultAbandoned = req.body;
+        const createdPayment = await paymentSuccessDataService.byDefaultAbandonedService(byDefaultAbandoned);
+        res.status(201).json({ success: true, message: "Payment created successfully", data: createdPayment });
+      } catch (error) {
+        res.status(500).json({ success: false, message: "Error creating payment", error: error.message });
+      }
+}
+
 exports.getPaymentsController = async (req, res) => {
     const { packageName } = req.query;
 
@@ -20,7 +30,6 @@ exports.getPaymentsController = async (req, res) => {
 
 exports.getAbandonedPaymentsController = async (req, res) => {
     try {
-        // Fetch abandoned payments using the service
         const abandonedPayments = await paymentSuccessDataService.getAbandonedPayments();
 
         if (!abandonedPayments || abandonedPayments.length === 0) {
@@ -29,6 +38,7 @@ exports.getAbandonedPaymentsController = async (req, res) => {
 
         res.status(200).json({ payments: abandonedPayments });
     } catch (error) {
+        console.error("Error fetching abandoned payments:", error);
         res.status(500).json({ error: "Error retrieving abandoned payments: " + error.message });
     }
 };

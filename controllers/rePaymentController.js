@@ -102,7 +102,7 @@ class rePaymentController {
           paymentID: paymentID || "N/A",
           trxID: "N/A",
           date: new Date().toISOString(),
-          amount: parseInt(data.amount), 
+          amount: 0, 
           name,
           email,
           number,
@@ -110,16 +110,16 @@ class rePaymentController {
           businessName,
           refund: "",
           paymentType: "bkash",
-          paymentNumber: data.payerAccount,
-          invoiceNumber: data.merchantInvoiceNumber,
+          paymentNumber: 'N/A',
+          invoiceNumber: 'N/A',
           paymentStatus: "abandoned",
         });
-
+              
         return res.redirect(`https://unrivaled-bombolone-c1a555.netlify.app/error?message=${status}`);
       } catch (error) {
-        console.error("Error logging abandoned payment:", error.message);
+        console.error("Abandoned:", error.message);
         return res.redirect(
-          `https://unrivaled-bombolone-c1a555.netlify.app/error?message=Error logging abandoned payment`
+          `https://unrivaled-bombolone-c1a555.netlify.app/error?message=${error.message}`
         );
       }
     }

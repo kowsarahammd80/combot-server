@@ -1,5 +1,13 @@
 const BkashPayment = require("../models/rePaymentModel");
 
+exports.byDefaultAbandonedService =async (data) => {
+    try {
+        const newPayment = new BkashPayment(data);
+        return await newPayment.save();
+      } catch (error) {
+        throw error;
+      }
+}
 
 exports.getPayments = async (packageName) => {
     // Filter by package name if provided, else return all payments
@@ -14,7 +22,12 @@ exports.getPayments = async (packageName) => {
 };
 
 exports.getAbandonedPayments = async () => {
-    // Query to filter payments with paymentStatus: "abonded"
     const query = { paymentStatus: "abandoned" };
-    return await BkashPayment.find(query).sort({ date: -1 });;
+
+    // Log query and results for debugging
+    // console.log("Query:", query);
+    const results = await BkashPayment.find(query).sort({ date: -1 });
+    // console.log("Results:", results);
+
+    return results;
 };

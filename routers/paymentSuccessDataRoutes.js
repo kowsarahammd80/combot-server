@@ -3,13 +3,13 @@ const paymentSuccessDataController= require('../controllers/paymentSuccessDataCo
 
 const router = express.Router();
 
-// router.route('/getPaymentSuccessData')
-// .get(paymentSuccessDataController.getRefundEmpty)
+router.route('/postByDefaultAbandoned')
+.post(paymentSuccessDataController.byDefaultAbandonedController)
 
 router.route('/getPaymentSuccessData')
 .get(paymentSuccessDataController.getPaymentsController)
 
-router.route('/getAbandonedPayments')
+router.route('/getAbandonedPaymentsAll')
 .get(paymentSuccessDataController.getAbandonedPaymentsController)
 
 

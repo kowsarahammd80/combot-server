@@ -40,7 +40,6 @@ const rePaymentSchema = new mongoose.Schema({
   },
   paymentID: {
     type: String,
-    unique: true
   },
   trxID: {
     type: String,
