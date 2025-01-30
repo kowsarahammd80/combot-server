@@ -39,7 +39,7 @@ class rePaymentController {
         {
           mode: "0011",
           payerReference: " ",
-          callbackURL: `https://combot-server-1.onrender.com/api/test/payment/callback?name=${encodeURIComponent(
+          callbackURL: `http://localhost:5000/api/test/payment/callback?name=${encodeURIComponent(
             name || "Default Name"
           )}&email=${encodeURIComponent(
             email || "example@example.com"
@@ -86,7 +86,7 @@ class rePaymentController {
     const existingPayment = await BkashPayment.findOne({ paymentID });
     if (existingPayment) {
       return res.redirect(
-        `https://unrivaled-bombolone-c1a555.netlify.app/success?message=Payment already processed`
+        `http://localhost:3001/success?message=Payment already processed`
       );
     }
 
@@ -115,11 +115,11 @@ class rePaymentController {
           paymentStatus: "abandoned",
         });
               
-        return res.redirect(`https://unrivaled-bombolone-c1a555.netlify.app/error?message=${status}`);
+        return res.redirect(`http://localhost:3001/error?message=${status}`);
       } catch (error) {
         console.error("Abandoned:", error.message);
         return res.redirect(
-          `https://unrivaled-bombolone-c1a555.netlify.app/error?message=${error.message}`
+          `http://localhost:3001/error?message=${error.message}`
         );
       }
     }
@@ -155,16 +155,16 @@ class rePaymentController {
           console.log(data);
 
           return res.redirect(
-            `https://unrivaled-bombolone-c1a555.netlify.app/success?message=${data.statusMessage}`
+            `http://localhost:3001/success?message=${data.statusMessage}`
           );
         } else {
           return res.redirect(
-            `https://unrivaled-bombolone-c1a555.netlify.app/error?message=${data.statusMessage}`
+            `http://localhost:3001/error?message=${data.statusMessage}`
           );
         }
       } catch (error) {
         return res.redirect(
-          `https://unrivaled-bombolone-c1a555.netlify.app/error?message=${error.message}`
+          `http://localhost:3001/error?message=${error.message}`
         );
       }
     }

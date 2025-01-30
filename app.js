@@ -7,9 +7,10 @@ const body_parser = require('body-parser')
 
 app.use(express.json());
 const allowedOrigins = [
-    'https://polite-cactus-675786.netlify.app',
-    'https://beamish-dodol-d1568a.netlify.app',
-    'https://unrivaled-bombolone-c1a555.netlify.app',
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://localhost:3002',
+    'http://localhost:5000'
 ];
 
 app.use(cors({
@@ -30,6 +31,7 @@ const paymentRoute = require ('./routers/paymentRoutes.js')
 // const bkashRoute = require ('./routers/bkashPaymentRoutes.js')
 const rePaymentRoutes = require('./routers/rePaymentRoutes.js')
 const paymentSuccessDataRoutes = require('./routers/paymentSuccessDataRoutes.js')
+const payStationRouter = require('./routers/payStationRouter.js')
 // const paymentInreget = require ('./routers/paymentIntregetRoutes.js')
 
 app.get("/", (req, res) => {
@@ -39,6 +41,7 @@ app.get("/", (req, res) => {
 app.use('/api', rePaymentRoutes)
 app.use('/api/paymentInfo', paymentRoute);
 app.use('/api', paymentSuccessDataRoutes)
+app.use('/api', payStationRouter)
 // app.use('/api', bkashRoute)
 // app.use('/api/bkash', paymentInreget)
 
