@@ -28,12 +28,11 @@ app.use(cors({
 app.use(body_parser.json())
 
 const paymentRoute = require ('./routers/paymentRoutes.js')
-// const bkashRoute = require ('./routers/bkashPaymentRoutes.js')
 const rePaymentRoutes = require('./routers/rePaymentRoutes.js')
 const paymentSuccessDataRoutes = require('./routers/paymentSuccessDataRoutes.js')
 const payStationRouter = require('./routers/payStationRouter.js')
 const packageRouters = require ('./routers/packageRouters.js')
-// const paymentInreget = require ('./routers/paymentIntregetRoutes.js')
+
 
 app.get("/", (req, res) => {
     res.send("Route is working! YaY!");
@@ -44,7 +43,6 @@ app.use('/api/paymentInfo', paymentRoute);
 app.use('/api', paymentSuccessDataRoutes)
 app.use('/api', payStationRouter)
 app.use('/api', packageRouters)
-// app.use('/api', bkashRoute)
-// app.use('/api/bkash', paymentInreget)
+
 
 module.exports = app;

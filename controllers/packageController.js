@@ -1,8 +1,7 @@
 const packageService = require('../service/packageService.js')
 
 exports.createPackageController = async (req, res) => {
-    try {
-        
+    try {  
       const packageData = req.body;
       console.log(packageData)
       const newPackage = await packageService.createPackage(packageData);
@@ -19,4 +18,19 @@ exports.getAllPackagesController = async (req, res) => {
     } catch (error) {
       res.status(500).json({ success: false, message: error.message });
     }
+};
+
+exports.deletePackageController = async (req, res) => {
+  try {
+      const { id } = req.params;
+      const deletedPackage = await packageService.deletePackageByIdService(id);
+      
+      if (!deletedPackage) {
+          return res.status(404).json({ success: false, message: "Package not found" });
+      }
+
+      res.status(200).json({ success: true, message: "Package deleted successfully" });
+  } catch (error) {
+      res.status(500).json({ success: false, message: "Server error", error: error.message });
+  }
 };

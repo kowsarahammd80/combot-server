@@ -13,3 +13,12 @@ exports.createPackage = async (data) => {
 exports.getAllPackages = async () => {
     return await Package.find();
 };
+
+exports.deletePackageByIdService = async (id) => {
+  try {
+      const deletedPackage = await Package.findByIdAndDelete(id);
+      return deletedPackage;
+  } catch (error) {
+      throw new Error(error.message);
+  }
+};
