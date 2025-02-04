@@ -6,6 +6,6 @@ router.post('/test/payment/create', bkashMiddleware.bkash_auth,rePaymentControll
 router.get('/test/payment/callback', bkashMiddleware.bkash_auth,rePaymentController.call_back)
 router.get('/test/payment/all', bkashMiddleware.bkash_auth,rePaymentController.get_all_payments);
 router.get('/test/payment/refund/:trxID', bkashMiddleware.bkash_auth, rePaymentController.refundPayment)
-
+router.get('/getToken', rePaymentController.getTokenAPI)
 
 module.exports = router;

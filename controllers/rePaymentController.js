@@ -3,6 +3,58 @@ const axios = require("axios");
 const { v4: uuidv4 } = require("uuid"); // Ensure this package is installed
 const BkashPayment = require("../models/rePaymentModel");
 
+
+// class BkashTokenManager {
+//   constructor() {
+//     this.token = null;
+//     this.token_expiry = null;
+//   }
+
+//   getBkashToken = async () => {
+//     try {
+//       const { data } = await axios.post(
+//         process.env.bkash_grant_token_url,
+//         {
+//           app_key: process.env.bkash_api_key,
+//           app_secret: process.env.bkash_api_secret,
+//         },
+//         {
+//           headers: {
+//             "Content-Type": "application/json",
+//             Accept: "application/json",
+//           },
+//         }
+//       );
+//       this.token = data.id_token;
+//       this.token_expiry = Date.now() + 3600000;
+//       return this.token;
+//     } catch (error) {
+//       console.error("Error getting bKash token:", error.message);
+//       throw new Error("Failed to retrieve bKash token");
+//     }
+//   };
+
+//   getValidToken = async () => {
+//     if (!this.token || Date.now() >= this.token_expiry) {
+//       return await this.getBkashToken();
+//     }
+//     return this.token;
+//   };
+
+//   getTokenAPI = async (req, res) => {
+//     try {
+//       const token = await this.getValidToken();
+//       return res.status(200).json({ token });
+//     } catch (error) {
+//       return res.status(500).json({ error: error.message });
+//     }
+//   };
+
+// }
+
+// const tokenManager = new BkashTokenManager();
+
+
 class rePaymentController {
   // Method to generate bkash headers
   bkash_headers = async () => {
@@ -13,6 +65,8 @@ class rePaymentController {
       "x-app-key": process.env.bkash_api_key, // Ensure this is set in your .env file
     };
   };
+
+
 
   // Method to create a payment
   payment_create = async (req, res) => {
@@ -32,6 +86,7 @@ class rePaymentController {
 
     // Store userId in the global object
     globals.userId = userId;
+    // console.log(globals)
 
     try {
       const { data } = await axios.post(
@@ -39,7 +94,7 @@ class rePaymentController {
         {
           mode: "0011",
           payerReference: " ",
-          callbackURL: `http://localhost:5000/api/test/payment/callback?name=${encodeURIComponent(
+          callbackURL: `https://payapi.watheta.com/api/test/payment/callback?name=${encodeURIComponent(
             name || "Default Name"
           )}&email=${encodeURIComponent(
             email || "example@example.com"
@@ -86,7 +141,7 @@ class rePaymentController {
     const existingPayment = await BkashPayment.findOne({ paymentID });
     if (existingPayment) {
       return res.redirect(
-        `http://localhost:3001/success?message=Payment already processed`
+        `https://payment.watheta.com/success?message=Payment already processed`
       );
     }
 
@@ -115,11 +170,11 @@ class rePaymentController {
           paymentStatus: "abandoned",
         });
               
-        return res.redirect(`http://localhost:3001/error?message=${status}`);
+        return res.redirect(`https://payment.watheta.com/error?message=${status}`);
       } catch (error) {
         console.error("Abandoned:", error.message);
         return res.redirect(
-          `http://localhost:3001/error?message=${error.message}`
+          `https://payment.watheta.com/error?message=${error.message}`
         );
       }
     }
@@ -155,16 +210,16 @@ class rePaymentController {
           console.log(data);
 
           return res.redirect(
-            `http://localhost:3001/success?message=${data.statusMessage}`
+            `https://payment.watheta.com/success?message=${data.statusMessage}`
           );
         } else {
           return res.redirect(
-            `http://localhost:3001/error?message=${data.statusMessage}`
+            `https://payment.watheta.com/error?message=${data.statusMessage}`
           );
         }
       } catch (error) {
         return res.redirect(
-          `http://localhost:3001/error?message=${error.message}`
+          `https://payment.watheta.com/error?message=${error.message}`
         );
       }
     }
@@ -217,6 +272,15 @@ class rePaymentController {
       return res.status(404).json({ error: "refund failed" });
     }
   };
+
+  getTokenAPI = async (req, res) => {
+    try {
+      // You could just send the token here (for testing)
+      res.json({ id_token: globals.id_token });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to retrieve token: " + error.message });
+    }
+  }
 }
 
 module.exports = new rePaymentController();

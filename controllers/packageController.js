@@ -34,3 +34,35 @@ exports.deletePackageController = async (req, res) => {
       res.status(500).json({ success: false, message: "Server error", error: error.message });
   }
 };
+
+exports.getPackageByIdController = async (req, res) => {
+  try {
+    const { id } = req.params; // Extract the ID from URL params
+    const packageData = await packageService.getPackageByIdService(id);
+
+    if (packageData.error) {
+      return res.status(404).json({ message: packageData.error });
+    }
+
+    res.status(200).json({ success: true, data: packageData });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+exports.updatePackageController = async (req, res) => {
+  try {
+      const packageId = req.params.id;
+      const updatedData = req.body;
+
+      const updatedPackage = await packageService.updatePackageByIdService(packageId, updatedData);
+
+      if (!updatedPackage) {
+          return res.status(404).json({ success: false, message: "Package not found" });
+      }
+
+      res.status(200).json({ success: true, message: "Package updated successfully", data: updatedPackage });
+  } catch (error) {
+      res.status(500).json({ success: false, message: "Error updating package", error: error.message });
+  }
+};

@@ -18,7 +18,7 @@ exports.getPayments = async (packageName) => {
     if (packageName) {
         query.packageName = packageName;
     }
-    return await BkashPayment.find(query).sort({ date: -1 });;
+    return await BkashPayment.find(query).sort({ date: -1 });
 };
 
 exports.getAbandonedPayments = async () => {
