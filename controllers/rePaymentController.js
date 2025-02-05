@@ -4,56 +4,6 @@ const { v4: uuidv4 } = require("uuid"); // Ensure this package is installed
 const BkashPayment = require("../models/rePaymentModel");
 
 
-// class BkashTokenManager {
-//   constructor() {
-//     this.token = null;
-//     this.token_expiry = null;
-//   }
-
-//   getBkashToken = async () => {
-//     try {
-//       const { data } = await axios.post(
-//         process.env.bkash_grant_token_url,
-//         {
-//           app_key: process.env.bkash_api_key,
-//           app_secret: process.env.bkash_api_secret,
-//         },
-//         {
-//           headers: {
-//             "Content-Type": "application/json",
-//             Accept: "application/json",
-//           },
-//         }
-//       );
-//       this.token = data.id_token;
-//       this.token_expiry = Date.now() + 3600000;
-//       return this.token;
-//     } catch (error) {
-//       console.error("Error getting bKash token:", error.message);
-//       throw new Error("Failed to retrieve bKash token");
-//     }
-//   };
-
-//   getValidToken = async () => {
-//     if (!this.token || Date.now() >= this.token_expiry) {
-//       return await this.getBkashToken();
-//     }
-//     return this.token;
-//   };
-
-//   getTokenAPI = async (req, res) => {
-//     try {
-//       const token = await this.getValidToken();
-//       return res.status(200).json({ token });
-//     } catch (error) {
-//       return res.status(500).json({ error: error.message });
-//     }
-//   };
-
-// }
-
-// const tokenManager = new BkashTokenManager();
-
 
 class rePaymentController {
   // Method to generate bkash headers
@@ -65,7 +15,6 @@ class rePaymentController {
       "x-app-key": process.env.bkash_api_key, // Ensure this is set in your .env file
     };
   };
-
 
 
   // Method to create a payment

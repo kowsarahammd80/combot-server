@@ -53,7 +53,7 @@ const rePaymentSchema = new mongoose.Schema({
   packageName: {
     type: String,
   },
-  businessName: { // Add this field
+  businessName: { 
     type: String,
   },
   paymentStatus:{

@@ -61,24 +61,24 @@ class middleware {
 
       
       const { data } = await axios.post(
-        'https://tokenized.sandbox.bka.sh/v1.2.0-beta/tokenized/checkout/token/grant',
+        'https://tokenized.pay.bka.sh/v1.2.0-beta/tokenized/checkout/token/grant',
         {
-          app_key: '4f6o0cjiki2rfm34kfdadl1eqq',
-          app_secret: '2is7hdktrekvrbljjh44ll3d9l1dtjo4pasmjvs5vl5qr3fug4b',
+          app_key: 'DidntKSWkyJF6XRkepROHmhZtc',
+          app_secret: 'EsJEVFbfZzOMGDumLucJJJfh9R99Lhy3EvOlfPwSJkt1NN0qe71z',
         },
         {
           headers: {
             "Content-Type": "application/json",
             Accept: "application/json",
-            username: 'sandboxTokenizedUser02',
-            password: 'sandboxTokenizedUser02@12345',
+            username: '01855108700',
+            password: 'QW&*Vw0C6Oa',
           },
         }
       );
 
       
       globals.id_token = data.id_token;
-      globals.tokenExpiration = Date.now() + 3600000; 
+      globals.tokenExpiration = Date.now() + 3600000; //token chash for 1 hours
       console.log("New id_token generated:", globals.id_token);
       
       

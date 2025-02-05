@@ -7,9 +7,10 @@ const body_parser = require('body-parser')
 
 app.use(express.json());
 const allowedOrigins = [
-    'http://localhost:3000',
-    'http://localhost:3001',
-    'http://localhost:5173'
+    'https://beta.watheta.com',
+    'https://payapi.watheta.com',
+    'https://payment.watheta.com',
+    'https://payadmin.watheta.com'
 ];
 
 app.use(cors({
