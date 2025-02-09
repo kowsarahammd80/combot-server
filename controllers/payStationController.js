@@ -3,6 +3,7 @@ const { v4: uuidv4 } = require("uuid"); // Generate unique IDs
 const globals = require("node-global-storage");
 const BkashPayment = require("../models/rePaymentModel");
 
+
 class PayStationController {
   // Method to generate headers for PayStation
   paystation_headers = async () => {
@@ -45,11 +46,12 @@ class PayStationController {
       console.log("Token Retrieved:", token);
 
       // Step 2: Create Payment
+      const invoicesNumber = "Inv" + uuidv4().substring(0, 5);
       console.log("Creating Payment...");
       const paymentResponse = await axios.post(
         "https://api.paystation.com.bd/create-payment",
         {
-          invoice_number: "Inv" + uuidv4().substring(0, 5),
+          invoice_number: invoicesNumber,
           currency,
           payment_amount: amount,
           reference: orderId,
@@ -57,7 +59,7 @@ class PayStationController {
           cust_phone: number,
           cust_email: email,
           cust_address: businessName,
-          callback_url: `http://localhost:5000/api/payment/callback`,
+          callback_url: `http://localhost:5000/api/payment/callback?orderId=${orderId}&name=${name}&email=${email}&number=${number}&packageName=${packageName}&currency=${currency}&businessName=${businessName}&invoiceNumber=${invoicesNumber}`,
           checkout_items: packageName,
         },
         {
@@ -66,7 +68,7 @@ class PayStationController {
       );
       // console.log("Payment Created:", paymentResponse.data);
       const paymentData = paymentResponse.data;
-      console.log(paymentData);
+      console.log("after payment",paymentData);
 
       // Step 3: Handle Payment URL
       if (paymentData.payment_url) {
@@ -92,72 +94,89 @@ class PayStationController {
 
   // Callback Method for Payment
   payment_callback = async (req, res) => {
-    const { status } = req.query;
-
-    console.log("Payment Callback:", req.query);
-
+    const { status, orderId, name, email, number, packageName, currency, businessName, trx_id, payment_amount, invoiceNumber } = req.query;
+    console.log("Payment Callback Data:", req.query);
+  
     try {
-      // const existingPayment = await BkashPayment.findOne({ paymentID });
-      // if (existingPayment) {
-      //   return res.redirect(
-      //     `http://localhost:3001/error?message= Your Trxid is invalid`
-      //   );
-      // }
+      // if (req.query.status === "Canceled" || req.query.trx_id === "") {
+      //   await BkashPayment.create({
+      //     userId: 469,
+      //     paymentID: req.query.invoice_number,
+      //     trxID: "N/A",
+      //     date: new Date().toISOString(),
+      //     amount: isNaN(parseInt(payment_amount)) ? 0 : parseInt(payment_amount),
+      //     paymentStatus: "abandoned",
+      //     name,
+      //     email,
+      //     number,
+      //     packegeName: packageName,
+      //     businessName,
+      //     refund: "",
+      //     paymentType: "paystation",
+      //     invoiceNumber: invoiceNumber,
+      //     paymentNumber: req.query.payer_mobile_no
+      //   });
 
-      if (status === "Canceled" || data.trx_id === "") {
-        console.log("Payment was cancelled or failed.", status);
-        await BkashPayment.create({
-            userId: globals.userId || "N/A",
-            // paymentID,
-            trxID: "N/A", // Replace with actual trxID from payment gateway
-            date: new Date().toISOString(),
-            amount: parseInt(data.payment_amount) || "N/A", // Replace with actual amount
-            paymentStatus: "abandoned",
-            name: req.query.name,
-            email: req.query.email,
-            number: req.query.number,
-            packegeName: req.query.packageName,
-            businessName: req.query.businessName,
-            refund: "",
-            paymentType: "paystation",
-            invoiceNumber: "N/A",
-        });
-
-        return res.redirect(
-          `http://localhost:3001/error?message=${status}`
-        );
-      }
-
-      if (status === "success" || status_code === "200") {
-        // Example Success Logic
-        await BkashPayment.create({
-          userId: globals.userId || "N/A",
-          paymentID,
-          trxID: data.trx_id, // Replace with actual trxID from payment gateway
+      if (req.query.status === "Canceled" || !req.query.trx_id) {
+        const paymentData = {
+          userId: Math.random() * 10 + 1,
+          paymentID: req.query.invoice_number,
+          trxID: "N/A",
           date: new Date().toISOString(),
-          amount: parseInt(data.payment_amount), // Replace with actual amount
-          paymentStatus: "success",
+          amount: isNaN(parseInt(req.query.payment_amount)) ? 0 : parseInt(req.query.payment_amount),
+          paymentStatus: "abandoned",
           name: req.query.name,
           email: req.query.email,
           number: req.query.number,
-          packegeName: req.query.packageName,
+          packageName: req.query.packageName,
           businessName: req.query.businessName,
           refund: "",
           paymentType: "paystation",
-          invoiceNumber: data.invoice_number,
+          invoiceNumber: req.query.invoice_number,
+          paymentNumber: req.query.payer_mobile_no || req.query.number || "N/A"
+        };
+    
+        // Log the data to console before saving it
+        console.log("Payment Data Before Storing:", paymentData);
+    
+        // Store in the database
+        // await BkashPayment.create(paymentData);
+        try {
+          const savedPayment = await BkashPayment.create(paymentData);
+          console.log("Payment Data Saved Successfully:", savedPayment);
+        } catch (dbError) {
+          console.error("Database Insert Error:", dbError);
+        }
+  
+        return res.redirect(`http://localhost:3000/error?message=${status}`);
+      }
+  
+      if (req.query.status === "success" || req.query.status_code === "200") {
+        await BkashPayment.create({
+          userId: "N/A",
+          paymentID: req.query.invoice_number,
+          trxID: trx_id,
+          date: new Date().toISOString(),
+          amount: parseInt(payment_amount),
+          paymentStatus: "success",
+          name,
+          email,
+          number,
+          packegeName: packageName,
+          businessName,
+          refund: "",
+          paymentType: "paystation",
+          invoiceNumber: req.query.invoice_number,
         });
-
-        return res.redirect(
-          `http://localhost:3001/success?message=Payment Successful`
-        );
+  
+        return res.redirect(`http://localhost:3000/success?message=Payment Successful`);
       }
     } catch (error) {
       console.error("Error in Payment Callback:", error.message);
-      return res.redirect(
-        `http://localhost:3001/error?message=${error.message}`
-      );
+      return res.redirect(`http://localhost:3000/error?message=${error.message}`);
     }
   };
+  
 }
 
 module.exports = new PayStationController();
