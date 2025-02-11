@@ -20,6 +20,15 @@ exports.getAllPackagesController = async (req, res) => {
     }
 };
 
+exports.getPublishAllPackagesController = async (req, res) => {
+  try {
+      const packages = await packageService.getPublishAllPackages();
+      res.status(200).json({ success: true, data: packages });
+  } catch (error) {
+      res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 exports.deletePackageController = async (req, res) => {
   try {
       const { id } = req.params;

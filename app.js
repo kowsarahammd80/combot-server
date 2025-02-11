@@ -35,17 +35,20 @@ const rePaymentRoutes = require('./routers/rePaymentRoutes.js')
 const paymentSuccessDataRoutes = require('./routers/paymentSuccessDataRoutes.js')
 const payStationRouter = require('./routers/payStationRouter.js')
 const packageRouters = require ('./routers/packageRouters.js')
+const userRouter = require ('./routers/userRouter.js')
 
 
 app.get("/", (req, res) => {
     res.send("Route is working! YaY!");
 });
 
+
 app.use('/api', rePaymentRoutes)
 app.use('/api/paymentInfo', paymentRoute);
 app.use('/api', paymentSuccessDataRoutes)
 app.use('/api', payStationRouter)
 app.use('/api', packageRouters)
+app.use('/api', userRouter);
 
 
 module.exports = app;

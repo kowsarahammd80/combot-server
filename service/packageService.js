@@ -14,6 +14,10 @@ exports.getAllPackages = async () => {
     return await Package.find().sort({ date: -1 });
 };
 
+exports.getPublishAllPackages = async () => {
+  return await Package.find({ packageStatus: "Publish" }).sort({ date: -1 });
+};
+
 exports.deletePackageByIdService = async (id) => {
   try {
       const deletedPackage = await Package.findByIdAndDelete(id);

@@ -34,7 +34,7 @@ class PayStationController {
       // Step 1: Request Token
       console.log("Requesting Token...");
       const tokenResponse = await axios.post(
-        "https://api.paystation.com.bd/grant-token",
+        "https://sandbox.paystation.com.bd/grant-token",
         {},
         {
           headers: await this.paystation_headers(),
@@ -49,7 +49,7 @@ class PayStationController {
       const invoicesNumber = "Inv" + uuidv4().substring(0, 5);
       console.log("Creating Payment...");
       const paymentResponse = await axios.post(
-        "https://api.paystation.com.bd/create-payment",
+        "https://sandbox.paystation.com.bd/create-payment",
         {
           invoice_number: invoicesNumber,
           currency,
@@ -59,7 +59,7 @@ class PayStationController {
           cust_phone: number,
           cust_email: email,
           cust_address: businessName,
-          callback_url: `http://localhost:5000/api/payment/callback?orderId=${orderId}&name=${name}&email=${email}&number=${number}&packageName=${packageName}&currency=${currency}&businessName=${businessName}&invoiceNumber=${invoicesNumber}`,
+          callback_url: `http://localhost:5000/api/payment/callback?orderId=${orderId}&name=${name}&email=${email}&number=${number}&packageName=${packageName}&currency=${currency}&businessName=${businessName}&invoiceNumber=${invoicesNumber}&amount=${amount}`,
           checkout_items: packageName,
         },
         {
@@ -94,8 +94,8 @@ class PayStationController {
 
   // Callback Method for Payment
   payment_callback = async (req, res) => {
-    const { status, orderId, name, email, number, packageName, currency, businessName, trx_id, payment_amount, invoiceNumber } = req.query;
-    console.log("Payment Callback Data:", req.query);
+    const { status, orderId, name, email, number, packageName, currency, businessName, trx_id, payment_amount, invoiceNumber, amount } = req.query;
+    console.log("Payment Callback Datas:", req.query);
   
     try {
       // if (req.query.status === "Canceled" || req.query.trx_id === "") {
@@ -123,7 +123,7 @@ class PayStationController {
           paymentID: req.query.invoice_number,
           trxID: "N/A",
           date: new Date().toISOString(),
-          amount: isNaN(parseInt(req.query.payment_amount)) ? 0 : parseInt(req.query.payment_amount),
+          amount: isNaN(parseInt(req.query.amount)) ? 0 : parseInt(req.query.amount),
           paymentStatus: "abandoned",
           name: req.query.name,
           email: req.query.email,
@@ -143,7 +143,7 @@ class PayStationController {
         // await BkashPayment.create(paymentData);
         try {
           const savedPayment = await BkashPayment.create(paymentData);
-          console.log("Payment Data Saved Successfully:", savedPayment);
+          console.log("Cancele Payment Data Saved:", savedPayment);
         } catch (dbError) {
           console.error("Database Insert Error:", dbError);
         }
@@ -175,9 +175,9 @@ class PayStationController {
         const paymentData = {
           userId: Math.random() * 10 + 1,
           paymentID: req.query.invoice_number,
-          trxID: "N/A",
+          trxID: req.query.trx_id,
           date: new Date().toISOString(),
-          amount: parseInt(req.query.payment_amount),
+          amount: parseInt(req.query.amount),
           paymentStatus: "success",
           name: req.query.name,
           email: req.query.email,
@@ -197,7 +197,7 @@ class PayStationController {
         // await BkashPayment.create(paymentData);
         try {
           const savedPayment = await BkashPayment.create(paymentData);
-          console.log("Payment success Data Saved Successfully:", savedPayment);
+          console.log("Successfully Payment Data Saved :", savedPayment);
         } catch (dbError) {
           console.error("Database Insert Error:", dbError);
         }
