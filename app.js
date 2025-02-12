@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const session = require("express-session"); // 🔹 Import express-session
+const MongoStore = require("connect-mongo");
 const body_parser = require('body-parser')
 
 //meddle ware 
@@ -29,6 +31,21 @@ app.use(cors({
     credentials: true,
 }));
 app.use(body_parser.json())
+
+app.use(session({
+    secret: process.env.SECRET_KEY, // Change this to a secure key
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+        mongoUrl: process.env.DataBase, // Change to your DB
+        collectionName: "sessions",
+    }),
+    cookie: {
+        secure: false, // Change to true if using HTTPS
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24, // 1 day expiry
+    },
+}));
 
 const paymentRoute = require ('./routers/paymentRoutes.js')
 const rePaymentRoutes = require('./routers/rePaymentRoutes.js')
