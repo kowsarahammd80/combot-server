@@ -94,7 +94,7 @@ class PayStationController {
 
   // Callback Method for Payment
   payment_callback = async (req, res) => {
-    const { status, orderId, name, email, number, packageName, currency, businessName, trx_id, payment_amount, invoiceNumber, amount } = req.query;
+    const { status, orderId, name, email, number, packageName, currency, businessName, trx_id, payment_amount, invoiceNumber, amount, payer_mobile_no } = req.query;
     console.log("Payment Callback Datas:", req.query);
   
     try {
