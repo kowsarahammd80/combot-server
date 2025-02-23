@@ -395,8 +395,8 @@ class PayStationController {
 
       // Payment request payload
       const paymentPayload = {
-        merchantId: "104-1653730183",
-        password: "gamecoderstorepass",
+        merchantId: "7871737986504",
+        password: "@D&65#0",
         invoice_number: invoicesNumber,
         currency,
         payment_amount: amount,
@@ -405,19 +405,19 @@ class PayStationController {
         cust_phone: number,
         cust_email: email,
         cust_address: businessName,
-        callback_url: `http://localhost:5000/api/payment/callback?orderId=${orderId}&name=${name}&email=${email}&number=${number}&packageName=${packageName}&currency=${currency}&businessName=${businessName}&invoiceNumber=${invoicesNumber}&amount=${amount}`,
+        callback_url: `https://payapi.watheta.com/api/payment/callback?orderId=${orderId}&name=${name}&email=${email}&number=${number}&packageName=${packageName}&currency=${currency}&businessName=${businessName}&invoiceNumber=${invoicesNumber}&amount=${amount}`,
         checkout_items: packageName,
       };
 
       // Send JSON request to PayStation
       const paymentResponse = await axios.post(
-        "https://sandbox.paystation.com.bd/initiate-payment",
+        "https://api.paystation.com.bd/initiate-payment",
         paymentPayload,
         {
           headers: {
             "Content-Type": "application/json",
             Accept: "application/json",
-            merchantId: "104-1653730183",
+            merchantId: "7871737986504",
             // password: "gamecoderstorepass"
           },
         }
@@ -664,7 +664,7 @@ payment_callback = async (req, res) => {
   console.log("Payment Callback Data:", req.query);
 
   try {
-    let payer_mobile_no = number || "N/A"; // ✅ Declare here before first use
+    let payer_mobile_no = number || "N/A"; // Declare here before first use
 
     if (status === "Canceled" || !trx_id) {
       const paymentData = {
@@ -682,7 +682,7 @@ payment_callback = async (req, res) => {
         refund: "",
         paymentType: "paystation",
         invoiceNumber: invoice_number,
-        paymentNumber: payer_mobile_no, // ✅ No error now
+        paymentNumber: payer_mobile_no,
       };
 
       console.log("Canceled Payment Data Before Storing:", paymentData);
@@ -694,13 +694,13 @@ payment_callback = async (req, res) => {
         console.error("Database Insert Error:", dbError);
       }
 
-      return res.redirect(`http://localhost:3000/error?message=${status}`);
+      return res.redirect(`https://payment.watheta.com/error?message=${status}`);
     }
 
     if (status === "Successful" || trx_id) {
       try {
         const transactionResponse = await axios.post(
-          "https://sandbox.paystation.com.bd/transaction-status",
+          "https://api.paystation.com.bd/transaction-status",
           { invoice_number },
           {
             headers: {
@@ -751,14 +751,12 @@ payment_callback = async (req, res) => {
       console.error("Database Insert Error:", dbError);
     }
 
-    return res.redirect(`http://localhost:3000/success?message=${status}`);
+    return res.redirect(`https://payment.watheta.com/success?message=${status}`);
   } catch (error) {
     console.error("Error in Payment Callback:", error.message);
-    return res.redirect(`http://localhost:3000/error?message=${error.message}`);
+    return res.redirect(`https://payment.watheta.com/error?message=${error.message}`);
   }
 };
 
-  
 }
-
 module.exports = new PayStationController();
